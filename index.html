@@ -13,7 +13,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh; /* Use full viewport height */
+    height: 100vh; 
     overflow: hidden;
         }
         
@@ -36,12 +36,12 @@
         }
         
         #gameCanvas {
-            max-width: 90vw; /* Maximum width relative to viewport */
-    max-height: 70vh; /* Maximum height relative to viewport */
+            max-width: 90vw; 
+    max-height: 70vh; 
     border: 4px solid #333;
     border-radius: 8px;
     background: #1a1a1a;
-    margin: 10px; /* Reduced margin */
+    margin: 10px;
     box-shadow: 0 0 20px rgba(0, 198, 255, 0.3);
         }
         
@@ -50,16 +50,16 @@
         }
         
         #controls {
-            margin: 10px; /* Reduced margin */
+            margin: 10px; 
     background: #232323;
-    padding: 8px 15px; /* Reduced padding */
+    padding: 8px 15px; 
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px; /* Reduced gap */
+    gap: 10px;
         }
         
         .control-key {
@@ -276,23 +276,23 @@
         function initLevel(levelIndex) {
             const level = levels[levelIndex];
             
-            // Reset ball position and velocity based on level config
+           
             ball.x = level.ball.x;
             ball.y = level.ball.y;
             ball.velocityX = level.ball.velocityX;
             ball.velocityY = level.ball.velocityY;
             ball.trail = [];
             
-            // Reset gravity direction
+           
             gravityDirection = 0;
             
-            // Update level indicator
+            
             levelIndicator.textContent = `Level: ${levelIndex + 1}/3 - ${level.name}`;
             
-            // Clear particles
+            
             particles = [];
             
-            // Re-enable game
+           
             isGameActive = true;
         }
         
@@ -313,7 +313,7 @@
             currentLevelIndex++;
             
             if (currentLevelIndex >= levels.length) {
-                // Game complete!
+               
                 showOverlay(
                     "CONGRATULATIONS!",
                     `You've completed all levels in ${formatTime(gameTime)}! Deaths: ${deathCount}`,
@@ -396,7 +396,7 @@
             const distance = Math.sqrt(distX * distX + distY * distY);
 
             if(distance <= ball.radius) {
-                // Determine collision side
+                
                 const overlapX = ball.radius - Math.abs(distX);
                 const overlapY = ball.radius - Math.abs(distY);
                 
@@ -408,7 +408,7 @@
                     ball.y += distY > 0 ? overlapY : -overlapY;
                 }
                 
-                // Create particles at collision point
+                
                 createCollisionParticles(testX, testY, 15);
                 playSound('obstacle');
                 
@@ -426,7 +426,7 @@
             if(distance < ball.radius + level.goal.radius) {
                 isGameActive = false;
                 
-                // Create celebration particles
+                
                 for (let i = 0; i < 100; i++) {
                     createParticle(
                         level.goal.x, 
@@ -441,7 +441,7 @@
                 
                 playSound('goal');
                 
-                // Show level complete overlay
+               
                 if (currentLevelIndex < levels.length - 1) {
                     showOverlay(
                         "LEVEL COMPLETE!",
@@ -504,7 +504,7 @@
                 }
             }
             
-            // Update trail particles
+           
             if (isGameActive && Math.random() > 0.5) {
                 trailParticles.push({
                     x: ball.x,
@@ -523,7 +523,7 @@
         }
         
         function drawParticles() {
-            // Draw trail first (under the ball)
+            
             for (let i = 0; i < trailParticles.length; i++) {
                 const p = trailParticles[i];
                 ctx.globalAlpha = p.life / 300;
@@ -534,7 +534,7 @@
             }
             ctx.globalAlpha = 1;
             
-            // Then draw normal particles
+           
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
                 ctx.globalAlpha = p.life / p.maxLife;
@@ -549,17 +549,17 @@
         function update() {
             if(!isGameActive) return;
             
-            // Track game time
+           
             gameTime = (Date.now() - startTime) / 1000;
             statsDisplay.textContent = `Time: ${formatTime(gameTime)} | Deaths: ${deathCount}`;
             
-            // Add position to trail
+           
             if (ball.trail.length > 20) {
                 ball.trail.shift();
             }
             ball.trail.push({x: ball.x, y: ball.y});
             
-            // Game physics
+           
             applyGravity();
             checkWallCollisions();
             
@@ -567,15 +567,15 @@
             level.obstacles.forEach(obs => checkObstacleCollision(obs));
             checkGoal();
             
-            // Apply velocities
+           
             ball.x += ball.velocityX;
             ball.y += ball.velocityY;
             
-            // Apply friction
+           
             ball.velocityX *= FRICTION;
             ball.velocityY *= FRICTION;
             
-            // Check if ball is out of bounds (extreme case)
+            
             if (
                 ball.x < -100 || 
                 ball.x > canvas.width + 100 || 
@@ -587,7 +587,7 @@
                 playSound('death');
             }
             
-            // Update particles
+           
             updateParticles();
         }
         
@@ -596,7 +596,7 @@
             
             const level = levels[currentLevelIndex];
             
-            // Draw background grid
+            
             ctx.strokeStyle = 'rgba(255,255,255,0.05)';
             ctx.lineWidth = 1;
             const gridSize = 50;
@@ -615,11 +615,11 @@
                 ctx.stroke();
             }
             
-            // Draw goal with glow effect
+            
             ctx.beginPath();
             ctx.arc(level.goal.x, level.goal.y, level.goal.radius, 0, Math.PI*2);
             
-            // Add glow
+            
             const goalGradient = ctx.createRadialGradient(
                 level.goal.x, level.goal.y, level.goal.radius * 0.5,
                 level.goal.x, level.goal.y, level.goal.radius * 1.5
@@ -637,7 +637,7 @@
             ctx.fill();
             ctx.globalAlpha = 1;
             
-            // Draw inner pulse
+            
             const pulseSize = Math.sin(Date.now() / 200) * 0.2 + 0.8;
             ctx.beginPath();
             ctx.arc(
@@ -650,7 +650,7 @@
             ctx.fillStyle = '#ffffff';
             ctx.fill();
             
-            // Draw obstacles
+            
             level.obstacles.forEach(obs => {
                 // Glow effect
                 ctx.shadowColor = obs.color;
@@ -662,7 +662,7 @@
                 // Reset shadow
                 ctx.shadowBlur = 0;
                 
-                // Add subtle gradient
+               
                 const gradient = ctx.createLinearGradient(
                     obs.x, obs.y, 
                     obs.x + obs.width, obs.y + obs.height
@@ -674,10 +674,10 @@
                 ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
             });
             
-            // Draw particles
+            
             drawParticles();
             
-            // Draw ball trail
+           
             for (let i = 0; i < ball.trail.length; i++) {
                 const alpha = i / ball.trail.length;
                 const size = ball.radius * alpha * 0.8;
@@ -687,8 +687,8 @@
                 ctx.fillStyle = `rgba(0, 198, 255, ${alpha * 0.3})`;
                 ctx.fill();
             }
-            
-            // Draw ball with glow
+           
+           
             ctx.shadowColor = ball.color;
             ctx.shadowBlur = ball.glow;
             
@@ -697,10 +697,10 @@
             ctx.fillStyle = ball.color;
             ctx.fill();
             
-            // Reset shadow
+          
             ctx.shadowBlur = 0;
             
-            // Add glossy highlight to ball
+           
             const gradient = ctx.createRadialGradient(
                 ball.x - ball.radius * 0.3, 
                 ball.y - ball.radius * 0.3, 
@@ -720,18 +720,18 @@
             ctx.fill();
             ctx.globalAlpha = 1;
             
-            // Draw gravity direction
+            
             const directions = ['↓', '→', '↑', '←'];
             const directionColors = ['#ff9900', '#00ff99', '#0099ff', '#ff00ff'];
             
-            // Gravity indicator in the center of the ball
+            
             ctx.fillStyle = directionColors[gravityDirection];
             ctx.font = '16px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(directions[gravityDirection], ball.x, ball.y);
             
-            // Reset text alignment
+            
             ctx.textAlign = 'left';
             ctx.textBaseline = 'alphabetic';
         }
@@ -742,7 +742,7 @@
             requestAnimationFrame(gameLoop);
         }
         
-        // Sound effects using Web Audio API
+       
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
         function playSound(type) {
@@ -816,7 +816,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Initialize the first level and start the game
+
 initLevel(currentLevelIndex);
 gameLoop();
 </script>
@@ -929,7 +929,7 @@ gameLoop();
             const distance = Math.sqrt(distX * distX + distY * distY);
 
             if(distance <= ball.radius) {
-                // Determine collision side
+                
                 const overlapX = ball.radius - Math.abs(distX);
                 const overlapY = ball.radius - Math.abs(distY);
                 
@@ -975,26 +975,26 @@ gameLoop();
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw obstacles
+            
             ctx.fillStyle = '#ff4455';
             currentLevel.obstacles.forEach(obs => {
                 ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
             });
 
-            // Draw goal
+            
             ctx.beginPath();
             ctx.arc(currentLevel.goal.x, currentLevel.goal.y, 
                     currentLevel.goal.radius, 0, Math.PI*2);
             ctx.fillStyle = '#44ff00';
             ctx.fill();
 
-            // Draw ball
+            
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
             ctx.fillStyle = ball.color;
             ctx.fill();
 
-            // Draw gravity direction
+            
             ctx.fillStyle = 'white';
             ctx.font = '20px Arial';
             const directions = ['↓', '→', '↑', '←'];
@@ -1007,7 +1007,7 @@ gameLoop();
             requestAnimationFrame(gameLoop);
         }
 
-        // Controls
+        
         document.addEventListener('keydown', (e) => {
             if(!isGameActive) return;
 
@@ -1036,7 +1036,7 @@ gameLoop();
             }
         });
 
-        // Start game
+        
         gameLoop();
     </script>
 </body>
